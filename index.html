@@ -12,7 +12,6 @@
             --text-color: #333333;
             --accent-color: #d84315; /* 强调色 */
         }
-
         body {
             font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
             background-color: var(--bg-color);
@@ -22,7 +21,6 @@
             display: flex;
             justify-content: center;
         }
-
         .container {
             max-width: 600px;
             width: 100%;
@@ -32,19 +30,16 @@
             padding: 25px;
             text-align: center;
         }
-
         h1 {
             color: var(--primary-color);
             font-size: 1.5rem;
             margin-bottom: 10px;
         }
-
         .subtitle {
             font-size: 0.9rem;
             color: #666;
             margin-bottom: 25px;
         }
-
         /* 布施码生成区域 */
         .code-box {
             background: #f0f7f0;
@@ -53,7 +48,6 @@
             border-radius: 8px;
             margin-bottom: 25px;
         }
-
         .generated-code {
             font-size: 2rem;
             font-weight: bold;
@@ -62,7 +56,6 @@
             margin: 10px 0;
             min-height: 40px; /* 占位防止跳动 */
         }
-
         .btn {
             background-color: var(--primary-color);
             color: white;
@@ -75,25 +68,46 @@
             width: 100%;
             max-width: 200px;
         }
-
         .btn:hover {
             opacity: 0.9;
         }
-
+        /* ----新增复制模块样式---- */
+        .copy-module {
+            margin-top:30px;
+            border-top:1px solid #eee;
+            padding-top:20px;
+            background:#f9fdfa;
+            border:1px dashed var(--primary-color);
+            border-radius:8px;
+            padding:18px;
+        }
+        .copy-module h3{
+            margin-top:0;
+            color:var(--primary-color);
+        }
+        .copy-btn{
+            width:100%;
+            max-width:100%;
+            border-radius:8px;
+            margin-bottom:12px;
+        }
+        .copy-tip{
+            font-size:0.85rem;
+            color:#888;
+            min-height:22px;
+        }
         /* 捐款档位区域 */
         .donation-section {
             margin-top: 30px;
             border-top: 1px solid #eee;
             padding-top: 20px;
         }
-
         .tiers-container {
             display: flex;
             justify-content: space-between;
             gap: 10px;
             margin-top: 15px;
         }
-
         .tier-btn {
             flex: 1;
             background: white;
@@ -105,12 +119,10 @@
             font-weight: bold;
             transition: all 0.2s;
         }
-
         .tier-btn:hover, .tier-btn.active {
             background: var(--primary-color);
             color: white;
         }
-
         .random-amount-display {
             margin-top: 15px;
             font-size: 1.2rem;
@@ -118,7 +130,6 @@
             font-weight: bold;
             height: 30px;
         }
-
         /* 查询与活动展示 */
         .info-links {
             margin-top: 30px;
@@ -127,13 +138,11 @@
             padding: 15px;
             border-radius: 8px;
         }
-
         .info-links h3 {
             font-size: 1rem;
             margin-top: 0;
             color: #444;
         }
-
         .info-links a {
             color: var(--primary-color);
             text-decoration: none;
@@ -150,16 +159,22 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <h1>头陀度假村 · 无相布施</h1>
     <p class="subtitle">以码代名，随心随缘，功德无量</p>
-
     <!-- 1. 无相布施码生成器 -->
     <div class="code-box">
         <p style="margin:0; font-size:0.9rem;">点击下方获取您的专属布施码</p>
         <div class="generated-code" id="displayCode">------</div>
         <button class="btn" onclick="generateCode()">获取布施码</button>
+    </div>
+
+    <!-- ========= 新增模块：一键复制微信粘贴内容 ========= -->
+    <div class="copy-module">
+        <h3>📋一键复制（直接粘贴微信）</h3>
+        <button class="btn copy-btn" onclick="copyWechatCode()">📝复制【#无相布施码】</button>
+        <button class="btn copy-btn" onclick="copyPaymentText()">💚复制微信付款串</button>
+        <div class="copy-tip" id="copyTip"></div>
     </div>
 
     <!-- 2. 随机金额捐款区 -->
@@ -168,19 +183,15 @@
         <p style="font-size:0.8rem; color:#666;">系统将自动计算随机整数金额，破除执着</p>
         
         <div class="tiers-container">
-            <!-- 这里的范围可以根据需要修改，例如 1-10, 10-50 -->
             <button class="tier-btn" onclick="handleDonation(1, 10)">随喜<br><span style="font-size:0.7em">1-10元</span></button>
             <button class="tier-btn" onclick="handleDonation(10, 50)">护持<br><span style="font-size:0.7em">10-50元</span></button>
             <button class="tier-btn" onclick="handleDonation(50, 100)">圆满<br><span style="font-size:0.7em">50-100元</span></button>
         </div>
-
         <div class="random-amount-display" id="amountDisplay"></div>
     </div>
-
     <!-- 3. 查询链接与活动展示 -->
     <div class="info-links">
         <h3>📢 动态与查询</h3>
-        <!-- 这里嵌入了您提供的金山文档链接 -->
         <a href="https://www.kdocs.cn/etapps/query/q/tsni23IQ" target="_blank">
             👉 点击此处前往金山文档查询布施记录
         </a>
@@ -188,13 +199,61 @@
             🏞️ 查看度假村建设动态图文
         </a>
     </div>
-
     <div class="footer-note">
         注：本页面为静态演示，实际支付需跳转微信支付。
     </div>
 </div>
-
 <script>
+    // ----------------工具函数（复制剪贴板，取自index1）----------------
+    function copyToClipboard(text) {
+        if (navigator.clipboard) {
+            return navigator.clipboard.writeText(text);
+        } else {
+            return new Promise((resolve)=>{
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                resolve(true);
+            })
+        }
+    }
+    // 复制提示
+    function showTip(msg){
+        const tipDom = document.getElementById('copyTip');
+        tipDom.innerText = msg;
+        setTimeout(()=>{tipDom.innerText = '';},3000);
+    }
+
+    // 固定微信付款串
+    const PAYMENT_STR = "#付款:愿力释凡提(amtfjwz)/放生功德款收款/001";
+
+    // 复制【带#的无相布施码】
+    function copyWechatCode(){
+        let pureCode = document.getElementById('displayCode').innerText.trim();
+        if(pureCode === "------"){
+            showTip("⚠️请先生成布施码！");
+            return;
+        }
+        const wechatCode = "#" + pureCode;
+        copyToClipboard(wechatCode).then(()=>{
+            showTip("✅已复制带#布施码，直接粘贴微信");
+        }).catch(()=>{
+            showTip("❌复制失败，请手动复制");
+        })
+    }
+
+    // 复制微信付款串
+    function copyPaymentText(){
+        copyToClipboard(PAYMENT_STR).then(()=>{
+            showTip("✅付款串复制完成，粘贴微信");
+        }).catch(()=>{
+            showTip("❌复制失败，请手动复制");
+        })
+    }
+
     // 1. 生成布施码逻辑
     function generateCode() {
         // 生成规则：WX + 时间戳后4位 + 随机3位数
@@ -210,7 +269,6 @@
             document.getElementById('displayCode').style.color = '#2e7d32';
         }, 500);
     }
-
     // 2. 处理捐款逻辑（随机金额）
     function handleDonation(min, max) {
         // 检查是否已生成布施码（可选逻辑，如果允许不生成直接捐则注释掉）
@@ -219,26 +277,19 @@
             alert('请先点击上方按钮获取您的“无相布施码”');
             return;
         }
-
         // 生成随机整数金额
         const randomAmount = Math.floor(Math.random() * (max - min + 1)) + min;
         
         // 显示金额
         const displayDiv = document.getElementById('amountDisplay');
         displayDiv.innerText = `本次随喜金额：¥ ${randomAmount}`;
-
         // 模拟跳转微信支付
-        // 注意：真实场景下，这里应该跳转到一个能接收金额的支付链接
-        // 由于是静态页，这里演示跳转到微信收款码页面或提示
         setTimeout(() => {
             if(confirm(`系统已为您选定随喜金额：${randomAmount}元。\n\n将使用布施码：${currentCode}\n\n是否立即前往支付？`)) {
-                // 这里替换为您真实的微信收款链接或支付二维码页面链接
-                // window.location.href = "weixin://..."; 
                 alert("正在唤起微信支付... (此处需配置真实支付链接)");
             }
         }, 800);
     }
 </script>
-
 </body>
 </html>
