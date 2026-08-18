@@ -99,6 +99,13 @@
         .code-display.show { display: block; }
         .code-text { font-size: 24px; font-weight: bold; color: var(--primary); letter-spacing: 3px; word-break: break-all; }
         .code-tip { font-size: 12px; color: var(--text-light); margin-top: 6px; }
+        .instruction-text {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 10px;
+            text-align: center;
+            line-height: 1.6;
+        }
         .tier-group { display: flex; gap: 10px; margin-bottom: 12px; }
         .tier-item {
             flex: 1;
@@ -114,76 +121,14 @@
         .tier-label { font-size: 13px; display: block; margin-bottom: 2px; }
         .tier-range { font-size: 11px; color: var(--text-light); }
         .tier-item.active .tier-range { color: var(--primary); opacity: 0.8; }
-        .amount-result {
+        .result-area {
             text-align: center;
-            padding: 16px;
-            background: #f9f5ee;
-            border-radius: 8px;
-            margin-top: 12px;
-            display: none;
-        }
-        .amount-result.show { display: block; }
-        .three-measurements {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 16px 0 12px;
-        }
-        .measure-box {
-            flex: 1;
-            max-width: 120px;
-            padding: 12px 8px;
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            text-align: center;
-            transition: border-color 0.3s;
-        }
-        .measure-box.highlight {
-            border-color: var(--primary);
-            background: #f9f5ee;
-        }
-        .measure-label {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-bottom: 6px;
-        }
-        .measure-value {
-            font-size: 22px;
+            margin: 15px 0;
+            font-size: 1.2rem;
             font-weight: bold;
             color: var(--primary);
+            min-height: 60px;
         }
-        .measure-unit {
-            font-size: 12px;
-            color: var(--text-light);
-        }
-        .avg-display {
-            text-align: center;
-            padding: 10px 16px;
-            background: #f0f7f0;
-            border: 1px solid #b2d8b2;
-            border-radius: 8px;
-            margin: 10px 0 6px;
-        }
-        .avg-label {
-            font-size: 13px;
-            color: #5a8a5a;
-        }
-        .avg-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2a6b5a;
-            margin: 0 4px;
-        }
-        .avg-hint {
-            font-size: 12px;
-            color: #888;
-            margin-top: 6px;
-            line-height: 1.6;
-        }
-
-        .amount-num { font-size: 32px; font-weight: bold; color: var(--primary); }
-        .amount-unit { font-size: 14px; color: var(--text-light); }
         .remain-times { font-size: 12px; color: var(--text-light); text-align: right; margin-top: 8px; }
         .pay-guide {
             background: #fffbe6;
@@ -222,19 +167,20 @@
     <div class="card">
         <div class="card-title">壹 · 生成吉祥码 (AMTF加持)</div>
         <p style="font-size:13px;color:#888;margin-bottom:12px;">
-            请输入身份证后3位，系统将生成吉祥码，数字将随机嵌入AMTF字母之间表示永远与AMTFo在一起，以此代替姓名参与无相布施。
+            请输入身份证后3位，系统将生成吉祥码，数字将随机嵌入AMTF字母之间表示永远与AMT-Fo在一起，以此代替姓名参与无相布施。
         </p>
         <input type="text" id="idInput" placeholder="请输入身份证后3位" maxlength="3" inputmode="numeric">
         <button class="btn btn-primary" onclick="generateCode()">生成并复制吉祥码</button>
         <div class="code-display" id="codeDisplay">
             <div class="code-text" id="codeText"></div>
-            <div class="code-tip">嘿，吉祥码生成成功啦！请进入第二步操作</div>
+            <div class="code-tip">嘿吉祥码生成成功啦！请进入第二步操作</div>
         </div>
     </div>
 
     <!-- 2. 随喜功德金 -->
     <div class="card">
         <div class="card-title">贰 · 随喜功德金</div>
+        <div class="instruction-text">请点击选择三个档位并有3次机会由程序测算随机金额</div>
         <div class="tier-group">
             <div class="tier-item active" data-tier="small" onclick="selectTier(this)">
                 <span class="tier-label">小额</span>
@@ -251,31 +197,7 @@
         </div>
         <div class="remain-times">今日剩余随喜次数：<span id="remainTimes">3</span>/3</div>
         <button class="btn btn-primary" onclick="calculateAmount()">随喜功德金</button>
-        <div class="amount-result" id="amountResult">
-            <div class="three-measurements">
-                <div class="measure-box highlight">
-                    <div class="measure-label">第1次测算</div>
-                    <div><span class="measure-value" id="measure1">0</span> <span class="measure-unit">元</span></div>
-                </div>
-                <div class="measure-box highlight">
-                    <div class="measure-label">第2次测算</div>
-                    <div><span class="measure-value" id="measure2">0</span> <span class="measure-unit">元</span></div>
-                </div>
-                <div class="measure-box highlight">
-                    <div class="measure-label">第3次测算</div>
-                    <div><span class="measure-value" id="measure3">0</span> <span class="measure-unit">元</span></div>
-                </div>
-            </div>
-            <div class="avg-display">
-                <span class="avg-label">第2次与第3次平均值：</span>
-                <span class="avg-value" id="avgValue">0</span>
-                <span class="measure-unit">元</span>
-            </div>
-            <div class="avg-hint">
-                💡 您可选取单次出现的，也可选择平均值作为本次随喜金额<br>
-                今日剩余随喜次数：<span id="remainTimes2">3</span>/3
-            </div>
-        </div>
+        <div id="meritResult" class="result-area"></div>
     </div>
 
     <!-- 3. 微信随喜布施 -->
@@ -287,8 +209,8 @@
         <button class="btn btn-wechat" onclick="copyPayInfo()">💚点此  一键复制吉祥码及布施链接并前往微信粘贴发送</button>
         <div class="pay-guide">
             📋 <strong>操作指引：</strong><br>
-            一定要回到手机微信中，直接粘贴发送给自己或安全位置。<br>
-            请长按这个带#号的含有AMTF加持的无相布施吉祥码，出现提示后选择复制，再点击下面带#字的微信付款链接，将您预先选定的金额填入上方的￥处，再将"吉祥码"填入无相布施码粘贴处后点击"付款"完成布施供养。<br>
+            回到微信后，直接粘贴发送给自己或可信之人，只能在手机微信中完成支付。<br>
+            请用手指按住这个带#号的含有AMTF加持的无相布施吉祥码，出现提示后选择复制，再点击下面带#字的微信付款链接，将您预先选定的金额填入上方的￥处，再将"吉祥码"填入无相布施码粘贴处后点击"付款"完成布施供养。<br>
             ⏰ 24小时后可以去<strong>无相放生页面</strong>用吉祥码查看支付信息。
         </div>
     </div>
@@ -326,13 +248,13 @@
     // ========== 配置项（按需修改） ==========
     const PAY_NOTE = '#布施:愿力释凡提(amtfjwz)/放生功德款收款/001';
     // ⚠️ 请替换为实际部署的GitHub Pages地址
-    const SITE_URL = 'https://zhushengsi.github.io/wuxiang-fangsheng';
+    const SITE_URL = 'https://zhushengsi.github.io/wuxiang-bushi/';
     // 微信支付链接（隐藏，仅复制到剪贴板）
     const WECHAT_PAY_LINK = '#付款:愿力释凡提(amtfjwz)/放生功德款收款/001';
     // 页面显示的操作指引文案（与复制到剪贴板的第2行保持一致）
-   const GUIDE_TEXT = '【操作指引】\n请长按前面带 "# "号 的含有"AMTF"加持的无相布施吉祥码，出现提示后点"复制"，再点击下面带"# "字的微信链接进入支付页面，将您原来选定的金额填入上方的￥处，在付款金额的下方将"吉祥码"填入无相布施吉祥码粘贴处后，点击最下方"付款"直到提示付款成功。';
+   const GUIDE_TEXT = '【操作指引】\n请用手指按住前面带 "井"号 的含有"AMTF"加持的无相布施吉祥码，出现提示后点"复制"，再点击下面带"井"字的微信付款链接，在付款金额的下方将"吉祥码"填入无相布施吉祥码粘贴处后，将您原来选定的金额填入上方的￥处，点击最下方"付款"。';
     // 提示语2
-    const TIP2_TEXT = '\n\n-----------------------\n-----------------------请您下次点击此无相布施链接，即可快速回到布施页面继续随喜功德或了解相关动态。\n24小时后可以去此链接用吉祥码查看布施供养信息。';
+    const TIP2_TEXT = '\n\n-----------------------\n-----------------------请您下次点击此无相布施链接，即可快速回到布施页面继续随喜功德。\n24小时后可以去此链接用吉祥码查看布施供养信息。';
 
     // ========== 状态管理 ==========
     const STORAGE_KEY = 'wuxiang_bushi_data';
@@ -345,22 +267,21 @@
                 const parsed = JSON.parse(saved);
                 const today = new Date().toDateString();
                 if (parsed.date !== today) {
-                    return { date: today, remainTimes: 3, code: '', amount: 0, tier: 'small', threeMeasures: null, avgValue: 0 };
-                }
-                // 确保旧数据也有新增字段
-                if (parsed.threeMeasures === undefined) {
-                    parsed.threeMeasures = null;
-                    parsed.avgValue = 0;
+                    return { date: today, remainTimes: 3, code: '', amount: 0, tier: 'small' };
                 }
                 return parsed;
             }
         } catch(e) {}
-        return { date: new Date().toDateString(), remainTimes: 3, code: '', amount: 0, tier: 'small', threeMeasures: null, avgValue: 0 };
+        return { date: new Date().toDateString(), remainTimes: 3, code: '', amount: 0, tier: 'small' };
     }
 
     function saveState() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
+
+    // ========== 测算状态（文件1的显示方式） ==========
+    let attempts = 0;
+    let history = [];
 
     // ========== Toast ==========
     function showToast(msg) {
@@ -419,11 +340,11 @@
         if (codeTextEl) codeTextEl.textContent = code;
         if (codeDisplayEl) codeDisplayEl.classList.add('show');
 
-        // 复制到剪贴板
+        // 复制到剪贴板（带#号）
         navigator.clipboard.writeText('#' + code).then(() => {
-            showToast('✅ 嘿，吉祥码已生成啦！' + code);
+            showToast('✅ 嘿，吉祥码已生成啦：' + code);
         }).catch(() => {
-            showToast('✅ 吉祥码已生成：' + code );
+            showToast('✅ 吉祥码已生成：' + code + '（请长按手动复制）');
         });
     }
 
@@ -433,48 +354,35 @@
         el.classList.add('active');
         state.tier = el.dataset.tier;
         saveState();
+        // 切换档位时重置测算显示
+        attempts = 0;
+        history = [];
+        document.getElementById('meritResult').innerHTML = '';
     }
 
     function calculateAmount() {
         if (state.remainTimes <= 0) {
-            showToast('今日随喜次数已用完，明日或下次再来吧');
+            showToast('今日随喜次数已用完，明日再来吧');
             return;
         }
         const ranges = { small: [1, 48], medium: [48, 148], large: [188, 488] };
         const [min, max] = ranges[state.tier];
+        const amount = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        // 三次独立随机测算（每次都是 [min, max] 范围内的均匀分布）
-        const m1 = Math.floor(Math.random() * (max - min + 1)) + min;
-        const m2 = Math.floor(Math.random() * (max - min + 1)) + min;
-        const m3 = Math.floor(Math.random() * (max - min + 1)) + min;
-
-        // 第2次与第3次的平均值（四舍五入取整）
-        const avg = Math.round((m2 + m3) / 2);
-
-        // 保存本次三次结果和平均值到状态
-        state.amount = avg;  // 默认以平均值作为建议金额
-        state.threeMeasures = [m1, m2, m3];
-        state.avgValue = avg;
+        // 使用文件1的显示方式
+        history.push(amount);
+        attempts++;
         state.remainTimes--;
         saveState();
 
-        // 更新UI
-        document.getElementById('measure1').textContent = m1;
-        document.getElementById('measure2').textContent = m2;
-        document.getElementById('measure3').textContent = m3;
-        document.getElementById('avgValue').textContent = avg;
-        document.getElementById('remainTimes').textContent = state.remainTimes;
-        document.getElementById('remainTimes2').textContent = state.remainTimes;
-        document.getElementById('amountResult').classList.add('show');
+        const avg = Math.round(history.reduce((a, b) => a + b, 0) / history.length);
+        const resultDiv = document.getElementById('meritResult');
+        let html = `<div>第 ${attempts} 次测算：¥ ${amount}</div>`;
+        if (attempts > 1) html += `<div style="font-size:0.9rem; margin-top:5px; color:#666;">当前平均值参考：¥ ${avg}</div>`;
+        if (attempts === 3) html += `<div style="color:red; font-size:0.8rem; margin-top:5px;">测算结束，请随喜功德</div>`;
+        resultDiv.innerHTML = html;
 
-        // 提示语：剩余次数提示
-        let remainMsg = '随喜完成！三次测算结果已显示。';
-        if (state.remainTimes > 0) {
-            remainMsg += '\n您还剩下 ' + state.remainTimes + ' 次。';
-        } else {
-            remainMsg += '\n今日次数已用完，明日或下次再来吧。';
-        }
-        showToast(remainMsg);
+        document.getElementById('remainTimes').textContent = state.remainTimes;
     }
 
     // ========== 3. 复制5行组合内容 ==========
@@ -504,7 +412,7 @@
             textarea.select();
             try {
                 document.execCommand('copy');
-                showToast('✅ 吉祥码及布施链接已复制\n请去微信中粘贴发送给自己或安全位置等');
+                showToast('✅ 吉祥码及布施链接已复制\n请去微信中粘贴发送给自己或家属等');
             } catch(e) {
                 showToast('❌ 复制失败，请手动复制吉祥码');
             }
@@ -515,17 +423,21 @@
     // ========== 初始化恢复状态 ==========
     window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('remainTimes').textContent = state.remainTimes;
-        document.getElementById('remainTimes2').textContent = state.remainTimes;
         if (state.code) {
             document.getElementById('codeText').textContent = state.code;
             document.getElementById('codeDisplay').classList.add('show');
         }
-        if (state.amount > 0 && state.threeMeasures) {
-            document.getElementById('measure1').textContent = state.threeMeasures[0];
-            document.getElementById('measure2').textContent = state.threeMeasures[1];
-            document.getElementById('measure3').textContent = state.threeMeasures[2];
-            document.getElementById('avgValue').textContent = state.avgValue;
-            document.getElementById('amountResult').classList.add('show');
+        // 恢复测算显示（如果有历史数据）
+        if (state.amount > 0) {
+            attempts = 3 - state.remainTimes;
+            // 重建历史数组（仅包含最后一次金额）
+            history = [state.amount];
+            const avg = Math.round(history.reduce((a, b) => a + b, 0) / history.length);
+            const resultDiv = document.getElementById('meritResult');
+            let html = `<div>第 ${attempts} 次测算：¥ ${state.amount}</div>`;
+            if (attempts > 1) html += `<div style="font-size:0.9rem; margin-top:5px; color:#666;">当前平均值参考：¥ ${avg}</div>`;
+            if (attempts === 3) html += `<div style="color:red; font-size:0.8rem; margin-top:5px;">测算结束，请随喜功德</div>`;
+            resultDiv.innerHTML = html;
         }
         document.querySelectorAll('.tier-item').forEach(i => {
             i.classList.toggle('active', i.dataset.tier === state.tier);
