@@ -2,294 +2,424 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>头陀度假村 - 无相布施助手</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>无相布施 · 多少随意 · 随喜赞叹</title> 
     <style>
         :root {
-            --primary-color: #2e7d32; /* 禅意绿 */
-            --bg-color: #f7f9f7;
+            --primary: #b8860b;
+            --bg: #fdfbf7;
             --card-bg: #ffffff;
-            --text-color: #333333;
-            --accent-color: #d84315; /* 强调色 */
+            --text: #333333;
+            --text-light: #888888;
+            --border: #e8e0d0;
+            --wechat-green: #07c160;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 40px;
         }
-        .container {
-            max-width: 600px;
-            width: 100%;
+        .header {
+            text-align: center;
+            padding: 30px 20px 20px;
+            background: linear-gradient(180deg, #f5efe6 0%, var(--bg) 100%);
+        }
+        .header h1 { font-size: 24px; color: var(--primary); letter-spacing: 4px; margin-bottom: 8px; }
+        .header p { font-size: 13px; color: var(--text-light); letter-spacing: 1px; }
+        .container { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+        .card {
             background: var(--card-bg);
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            padding: 25px;
+            padding: 24px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(184, 134, 11, 0.06);
+            border: 1px solid var(--border);
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-title::before {
+            content: '';
+            width: 4px; height: 16px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            background: #fafaf8;
+            transition: border-color 0.3s;
+        }
+        input:focus { border-color: var(--primary); }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            letter-spacing: 2px;
+            text-decoration: none;
+            display: inline-block;
             text-align: center;
         }
-        h1 {
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            margin-bottom: 10px;
+        .btn:active { opacity: 0.8; }
+        .btn-primary { background: var(--primary); color: #fff; margin-top: 12px; }
+        .btn-wechat { background: var(--wechat-green); color: #fff; margin-top: 12px; }
+        .btn-outline { 
+            background: transparent; 
+            border: 1px solid var(--primary); 
+            color: var(--primary); 
+            margin-top: 8px; 
         }
-        .subtitle {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 25px;
-        }
-        /* 布施码生成区域 */
-        .code-box {
-            background: #f0f7f0;
-            border: 1px dashed var(--primary-color);
-            padding: 20px;
+        .code-display {
+            background: #f9f5ee;
+            border: 1px dashed var(--primary);
             border-radius: 8px;
-            margin-bottom: 25px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 12px;
+            display: none;
         }
-        .generated-code {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            letter-spacing: 2px;
-            margin: 10px 0;
-            min-height: 40px; /* 占位防止跳动 */
-        }
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: opacity 0.3s;
-            width: 100%;
-            max-width: 200px;
-        }
-        .btn:hover {
-            opacity: 0.9;
-        }
-        /* ----新增复制模块样式---- */
-        .copy-module {
-            margin-top:30px;
-            border-top:1px solid #eee;
-            padding-top:20px;
-            background:#f9fdfa;
-            border:1px dashed var(--primary-color);
-            border-radius:8px;
-            padding:18px;
-        }
-        .copy-module h3{
-            margin-top:0;
-            color:var(--primary-color);
-        }
-        .copy-btn{
-            width:100%;
-            max-width:100%;
-            border-radius:8px;
-            margin-bottom:12px;
-        }
-        .copy-tip{
-            font-size:0.85rem;
-            color:#888;
-            min-height:22px;
-        }
-        /* 捐款档位区域 */
-        .donation-section {
-            margin-top: 30px;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-        }
-        .tiers-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .tier-btn {
+        .code-display.show { display: block; }
+        .code-text { font-size: 24px; font-weight: bold; color: var(--primary); letter-spacing: 3px; word-break: break-all; }
+        .code-tip { font-size: 12px; color: var(--text-light); margin-top: 6px; }
+        .tier-group { display: flex; gap: 10px; margin-bottom: 12px; }
+        .tier-item {
             flex: 1;
-            background: white;
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 15px 5px;
+            padding: 12px 8px;
+            border: 1px solid var(--border);
             border-radius: 8px;
+            text-align: center;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            background: #fafaf8;
         }
-        .tier-btn:hover, .tier-btn.active {
-            background: var(--primary-color);
-            color: white;
-        }
-        .random-amount-display {
-            margin-top: 15px;
-            font-size: 1.2rem;
-            color: var(--accent-color);
-            font-weight: bold;
-            height: 30px;
-        }
-        /* 查询与活动展示 */
-        .info-links {
-            margin-top: 30px;
-            text-align: left;
-            background: #fafafa;
-            padding: 15px;
+        .tier-item.active { border-color: var(--primary); background: #f9f5ee; color: var(--primary); font-weight: 600; }
+        .tier-label { font-size: 13px; display: block; margin-bottom: 2px; }
+        .tier-range { font-size: 11px; color: var(--text-light); }
+        .tier-item.active .tier-range { color: var(--primary); opacity: 0.8; }
+        .amount-result {
+            text-align: center;
+            padding: 16px;
+            background: #f9f5ee;
             border-radius: 8px;
+            margin-top: 12px;
+            display: none;
         }
-        .info-links h3 {
-            font-size: 1rem;
-            margin-top: 0;
-            color: #444;
+        .amount-result.show { display: block; }
+        .amount-num { font-size: 32px; font-weight: bold; color: var(--primary); }
+        .amount-unit { font-size: 14px; color: var(--text-light); }
+        .remain-times { font-size: 12px; color: var(--text-light); text-align: right; margin-top: 8px; }
+        .pay-guide {
+            background: #fffbe6;
+            border: 1px solid #ffe58f;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 14px;
+            font-size: 13px;
+            color: #8c6d1f;
+            line-height: 1.9;
         }
-        .info-links a {
-            color: var(--primary-color);
-            text-decoration: none;
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
+        .pay-guide strong { color: #b8860b; }
+        .content-section { font-size: 14px; color: #555; line-height: 1.8; }
+        .content-section h3 { font-size: 15px; color: var(--primary); margin: 16px 0 8px; }
+        .content-section p { margin-bottom: 10px; text-align: justify; }
+        .toast {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.75); color: #fff; padding: 12px 24px;
+            border-radius: 8px; font-size: 14px; z-index: 999;
+            opacity: 0; transition: opacity 0.3s; pointer-events: none;
+            text-align: center; max-width: 85%; white-space: pre-line;
         }
-        
-        .footer-note {
-            margin-top: 20px;
-            font-size: 0.8rem;
-            color: #999;
-        }
+        .toast.show { opacity: 1; }
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #bbb; }
     </style>
 </head>
 <body>
+
+<div class="header">
+    <h1>无相布施</h1>
+    <p>以无相之心 · 行有相之善</p>
+</div>
+
 <div class="container">
-    <h1>头陀度假村 · 无相布施</h1>
-    <p class="subtitle">以码代名，随心随缘，功德无量</p>
-    <!-- 1. 无相布施码生成器 -->
-    <div class="code-box">
-        <p style="margin:0; font-size:0.9rem;">点击下方获取您的专属布施码</p>
-        <div class="generated-code" id="displayCode">------</div>
-        <button class="btn" onclick="generateCode()">获取布施码</button>
-    </div>
-
-    <!-- ========= 新增模块：一键复制微信粘贴内容 ========= -->
-    <div class="copy-module">
-        <h3>📋一键复制（直接粘贴微信）</h3>
-        <button class="btn copy-btn" onclick="copyWechatCode()">📝复制【#无相布施码】</button>
-        <button class="btn copy-btn" onclick="copyPaymentText()">💚复制微信付款串</button>
-        <div class="copy-tip" id="copyTip"></div>
-    </div>
-
-    <!-- 2. 随机金额捐款区 -->
-    <div class="donation-section">
-        <h3>选择心意档位 (随机金额)</h3>
-        <p style="font-size:0.8rem; color:#666;">系统将自动计算随机整数金额，破除执着</p>
-        
-        <div class="tiers-container">
-            <button class="tier-btn" onclick="handleDonation(1, 10)">随喜<br><span style="font-size:0.7em">1-10元</span></button>
-            <button class="tier-btn" onclick="handleDonation(10, 50)">护持<br><span style="font-size:0.7em">10-50元</span></button>
-            <button class="tier-btn" onclick="handleDonation(50, 100)">圆满<br><span style="font-size:0.7em">50-100元</span></button>
+    <!-- 1. 生成吉祥码 -->
+    <div class="card">
+        <div class="card-title">壹 · 生成吉祥码 (AMTF加持)</div>
+        <p style="font-size:13px;color:#888;margin-bottom:12px;">
+            请输入身份证后3位，系统将生成吉祥码，数字将随机嵌入AMTF字母之间表示永远与AMTFo在一起，以此代替姓名参与无相布施。
+        </p>
+        <input type="text" id="idInput" placeholder="请输入身份证后3位" maxlength="3" inputmode="numeric">
+        <button class="btn btn-primary" onclick="generateCode()">生成并复制吉祥码</button>
+        <div class="code-display" id="codeDisplay">
+            <div class="code-text" id="codeText"></div>
+            <div class="code-tip">嘿，吉祥码生成成功啦！请进入第二步操作</div>
         </div>
-        <div class="random-amount-display" id="amountDisplay"></div>
     </div>
-    <!-- 3. 查询链接与活动展示 -->
-    <div class="info-links">
-        <h3>📢 动态与查询</h3>
-        <a href="https://www.kdocs.cn/etapps/query/q/tsni23IQ" target="_blank">
-            👉 点击此处前往金山文档查询布施记录
-        </a>
-        <a href="#" onclick="alert('此处可放置度假村建设进展的图片或文字详情')">
-            🏞️ 查看度假村建设动态图文
-        </a>
+
+    <!-- 2. 随喜功德金 -->
+    <div class="card">
+        <div class="card-title">贰 · 随喜功德金</div>
+        <div class="tier-group">
+            <div class="tier-item active" data-tier="small" onclick="selectTier(this)">
+                <span class="tier-label">小额</span>
+                <span class="tier-range">1 ~ 48元</span>
+            </div>
+            <div class="tier-item" data-tier="medium" onclick="selectTier(this)">
+                <span class="tier-label">中额</span>
+                <span class="tier-range">48 ~ 148元</span>
+            </div>
+            <div class="tier-item" data-tier="large" onclick="selectTier(this)">
+                <span class="tier-label">大额</span>
+                <span class="tier-range">188 ~ 488元</span>
+            </div>
+        </div>
+        <div class="remain-times">今日剩余随喜次数：<span id="remainTimes">3</span>/3</div>
+        <button class="btn btn-primary" onclick="calculateAmount()">随喜功德金</button>
+        <div class="amount-result" id="amountResult">
+            <div><span class="amount-num" id="amountNum">0</span> <span class="amount-unit">元</span></div>
+            <div style="font-size:12px;color:#888;margin-top:4px;">建议随喜金额（不满意可自己再临时决定的哦）</div>
+        </div>
     </div>
-    <div class="footer-note">
-        注：本页面为静态演示，实际支付需跳转微信支付。
+
+    <!-- 3. 微信随喜布施 -->
+    <div class="card">
+        <div class="card-title">叁 · 微信随喜布施</div>
+        <p style="font-size:13px;color:#888;margin-bottom:12px;">
+            请点击下方按钮
+        </p>
+        <button class="btn btn-wechat" onclick="copyPayInfo()">💚点此  一键复制吉祥码及布施链接并前往微信粘贴发送</button>
+        <div class="pay-guide">
+            📋 <strong>操作指引：</strong><br>
+            一定要回到手机微信中，直接粘贴发送给自己或安全位置。<br>
+            请长按这个带#号的含有AMTF加持的无相布施吉祥码，出现提示后选择复制，再点击下面带#字的微信付款链接，将您预先选定的金额填入上方的￥处，再将"吉祥码"填入无相布施码粘贴处后点击"付款"完成布施供养。<br>
+            ⏰ 24小时后可以去<strong>无相放生页面</strong>用吉祥码查看支付信息。
+        </div>
+    </div>
+
+    <!-- 4. 布施动态与查询 -->
+    <div class="card">
+        <div class="card-title">肆 · 布施动态与记录查询</div>
+        <a href="https://www.kdocs.cn/etapps/query/q/s4bmiLMA" target="_blank" class="btn btn-outline" style="text-decoration:none;">🔍 查询布施记录（每天00点前后刷新一次）</a>
+        <div class="content-section" style="margin-top:12px;font-size:13px;color:#888;">
+            📢 布施动态图文展示。（待完善....）
+        </div>
+    </div>
+
+    <!-- 5. 关于无相布施 -->
+    <div class="card">
+        <div class="card-title">伍 · 关于无相布施</div>
+        <div class="content-section">
+            <h3>🙏 什么是无相布施？</h3>
+            <p>《金刚经》云："菩萨于法，应无所住行于布施。"无相布施即不执着于施者、受者、所施之物三轮体空之相，以清净心行善，功德最为殊胜。</p>
+            <h3>📌 参与方式</h3>
+            <p>1. 生成专属吉祥码作为匿名标识<br>
+               2. 随喜功德金额，随心而行<br>
+               3. 复制布施信息，在微信备注中粘贴<br>
+               4. 凭吉祥码查询个人功德记录</p>
+            <h3>✨ 功德回向</h3>
+            <p>愿以此功德，普及于一切。我等与众生，皆共成佛道。祈愿世界和平、国泰民安、众生离苦得乐。</p>
+        </div>
     </div>
 </div>
+
+<div class="footer">无相布施 · 三轮体空 · 功德无量</div>
+<div class="toast" id="toast"></div>
+
 <script>
-    // ----------------工具函数（复制剪贴板，取自index1）----------------
-    function copyToClipboard(text) {
-        if (navigator.clipboard) {
-            return navigator.clipboard.writeText(text);
-        } else {
-            return new Promise((resolve)=>{
-                const ta = document.createElement('textarea');
-                ta.value = text;
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                resolve(true);
-            })
-        }
-    }
-    // 复制提示
-    function showTip(msg){
-        const tipDom = document.getElementById('copyTip');
-        tipDom.innerText = msg;
-        setTimeout(()=>{tipDom.innerText = '';},3000);
-    }
+    // ========== 配置项（按需修改） ==========
+    const PAY_NOTE = '#布施:愿力释凡提(amtfjwz)/放生功德款收款/001';
+    // ⚠️ 请替换为实际部署的GitHub Pages地址
+    const SITE_URL = 'https://zhushengsi.github.io/wuxiang-fangsheng';
+    // 微信支付链接（隐藏，仅复制到剪贴板）
+    const WECHAT_PAY_LINK = '#付款:愿力释凡提(amtfjwz)/放生功德款收款/001';
+    // 页面显示的操作指引文案（与复制到剪贴板的第2行保持一致）
+   const GUIDE_TEXT = '【操作指引】\n请长按前面带 "# "号 的含有"AMTF"加持的无相布施吉祥码，出现提示后点"复制"，再点击下面带"# "字的微信链接进入支付页面，将您原来选定的金额填入上方的￥处，在付款金额的下方将"吉祥码"填入无相布施吉祥码粘贴处后，点击最下方"付款"直到提示付款成功。';
+    // 提示语2
+    const TIP2_TEXT = '\n\n-----------------------\n-----------------------请您下次点击此无相布施链接，即可快速回到布施页面继续随喜功德或了解相关动态。\n24小时后可以去此链接用吉祥码查看布施供养信息。';
 
-    // 固定微信付款串
-    const PAYMENT_STR = "#付款:愿力释凡提(amtfjwz)/放生功德款收款/001";
+    // ========== 状态管理 ==========
+    const STORAGE_KEY = 'wuxiang_bushi_data';
+    let state = loadState();
 
-    // 复制【带#的无相布施码】
-    function copyWechatCode(){
-        let pureCode = document.getElementById('displayCode').innerText.trim();
-        if(pureCode === "------"){
-            showTip("⚠️请先生成布施码！");
-            return;
-        }
-        const wechatCode = "#" + pureCode;
-        copyToClipboard(wechatCode).then(()=>{
-            showTip("✅已复制带#布施码，直接粘贴微信");
-        }).catch(()=>{
-            showTip("❌复制失败，请手动复制");
-        })
-    }
-
-    // 复制微信付款串
-    function copyPaymentText(){
-        copyToClipboard(PAYMENT_STR).then(()=>{
-            showTip("✅付款串复制完成，粘贴微信");
-        }).catch(()=>{
-            showTip("❌复制失败，请手动复制");
-        })
-    }
-
-    // 1. 生成布施码逻辑
-    function generateCode() {
-        // 生成规则：WX + 时间戳后4位 + 随机3位数
-        const randomPart = Math.floor(Math.random() * 900) + 100; 
-        const timePart = new Date().getTime().toString().slice(-4);
-        const code = `WX${timePart}${randomPart}`;
-        
-        document.getElementById('displayCode').innerText = code;
-        document.getElementById('displayCode').style.color = '#d84315'; // 高亮显示
-        
-        // 简单的动画效果
-        setTimeout(() => {
-            document.getElementById('displayCode').style.color = '#2e7d32';
-        }, 500);
-    }
-    // 2. 处理捐款逻辑（随机金额）
-    function handleDonation(min, max) {
-        // 检查是否已生成布施码（可选逻辑，如果允许不生成直接捐则注释掉）
-        const currentCode = document.getElementById('displayCode').innerText;
-        if (currentCode === '------') {
-            alert('请先点击上方按钮获取您的“无相布施码”');
-            return;
-        }
-        // 生成随机整数金额
-        const randomAmount = Math.floor(Math.random() * (max - min + 1)) + min;
-        
-        // 显示金额
-        const displayDiv = document.getElementById('amountDisplay');
-        displayDiv.innerText = `本次随喜金额：¥ ${randomAmount}`;
-        // 模拟跳转微信支付
-        setTimeout(() => {
-            if(confirm(`系统已为您选定随喜金额：${randomAmount}元。\n\n将使用布施码：${currentCode}\n\n是否立即前往支付？`)) {
-                alert("正在唤起微信支付... (此处需配置真实支付链接)");
+    function loadState() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                const today = new Date().toDateString();
+                if (parsed.date !== today) {
+                    return { date: today, remainTimes: 3, code: '', amount: 0, tier: 'small' };
+                }
+                return parsed;
             }
-        }, 800);
+        } catch(e) {}
+        return { date: new Date().toDateString(), remainTimes: 3, code: '', amount: 0, tier: 'small' };
     }
+
+    function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    // ========== Toast ==========
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ========== 1. 生成吉祥码 (AMTF顺序固定 + 5数字随机嵌入5个间隙) ==========
+    function generateCode() {
+        const input = document.getElementById('idInput').value.trim();
+        if (!/^\d{3}$/.test(input)) {
+            showToast('请输入正确的身份证后3位数字');
+            return;
+        }
+
+        // Step1: 身份证后3位随机打乱顺序
+        const digits = input.split('');
+        for (let i = digits.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [digits[i], digits[j]] = [digits[j], digits[i]];
+        }
+
+        // Step2: 增加2位随机数字，共5个数字
+        const extraDigit1 = String(Math.floor(Math.random() * 10));
+        const extraDigit2 = String(Math.floor(Math.random() * 10));
+        const allDigits = [...digits, extraDigit1, extraDigit2];
+
+        // Step3: AMTF四个字母顺序固定，共有5个可插入间隙：_A_M_T_F_
+        // 5个数字对应5个间隙，每个间隙恰好放1个数字
+        const slots = [0, 1, 2, 3, 4];
+        // 从5个间隙中随机选5个位置（即全部选中），但打乱分配顺序
+        const shuffledSlots = slots.sort(() => Math.random() - 0.5);
+        
+        // 构建结果：间隙索引0-4对应数组位置0,2,4,6,8；字母固定在1,3,5,7
+        const result = new Array(9).fill('');
+        result[1] = 'A';
+        result[3] = 'M';
+        result[5] = 'T';
+        result[7] = 'F';
+        
+        const slotToIndex = [0, 2, 4, 6, 8];
+        for (let d = 0; d < allDigits.length; d++) {
+            const slotIdx = shuffledSlots[d];
+            result[slotToIndex[slotIdx]] = allDigits[d];
+        }
+
+        const code = result.join('');
+        state.code = code;
+        saveState();
+
+        // 显示吉祥码
+        const codeTextEl = document.getElementById('codeText');
+        const codeDisplayEl = document.getElementById('codeDisplay');
+        if (codeTextEl) codeTextEl.textContent = code;
+        if (codeDisplayEl) codeDisplayEl.classList.add('show');
+
+        // 复制到剪贴板
+        navigator.clipboard.writeText('#' + code).then(() => {
+            showToast('✅ 嘿，吉祥码已生成啦！' + code);
+        }).catch(() => {
+            showToast('✅ 吉祥码已生成：' + code );
+        });
+    }
+
+    // ========== 2. 档位选择 & 随喜 ==========
+    function selectTier(el) {
+        document.querySelectorAll('.tier-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        state.tier = el.dataset.tier;
+        saveState();
+    }
+
+    function calculateAmount() {
+        if (state.remainTimes <= 0) {
+            showToast('今日随喜次数已用完，明日或下次再来吧');
+            return;
+        }
+        const ranges = { small: [1, 48], medium: [48, 148], large: [188, 488] };
+        const [min, max] = ranges[state.tier];
+        const amount = Math.floor(Math.random() * (max - min + 1)) + min;
+
+        state.amount = amount;
+        state.remainTimes--;
+        saveState();
+
+        document.getElementById('remainTimes').textContent = state.remainTimes;
+        document.getElementById('amountNum').textContent = amount;
+        document.getElementById('amountResult').classList.add('show');
+        showToast('随喜完成：' + amount + '元');
+    }
+
+    // ========== 3. 复制5行组合内容 ==========
+    function copyPayInfo() {
+        if (!state.code) {
+            showToast('⚠️ 请先生成吉祥码再操作');
+            return;
+        }
+        // 5行组合：吉祥码 → 操作指引 → 微信支付链接 → 提示语2 → GitHub静态链接
+        const fullText = [
+            '#' + state.code,
+            GUIDE_TEXT,
+            '💳 微信布施链接：' + WECHAT_PAY_LINK,
+            TIP2_TEXT,
+            '🔗 ' + SITE_URL
+        ].join('\n');
+        
+        navigator.clipboard.writeText(fullText).then(() => {
+            showToast('✅ 吉祥码及布施链接已复制\n请去微信中粘贴发送给自己或家属等');
+        }).catch(() => {
+            // 降级方案
+            const textarea = document.createElement('textarea');
+            textarea.value = fullText;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('✅ 吉祥码及布施链接已复制\n请去微信中粘贴发送给自己或安全位置等');
+            } catch(e) {
+                showToast('❌ 复制失败，请手动复制吉祥码');
+            }
+            document.body.removeChild(textarea);
+        });
+    }
+
+    // ========== 初始化恢复状态 ==========
+    window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('remainTimes').textContent = state.remainTimes;
+        if (state.code) {
+            document.getElementById('codeText').textContent = state.code;
+            document.getElementById('codeDisplay').classList.add('show');
+        }
+        if (state.amount > 0) {
+            document.getElementById('amountNum').textContent = state.amount;
+            document.getElementById('amountResult').classList.add('show');
+        }
+        document.querySelectorAll('.tier-item').forEach(i => {
+            i.classList.toggle('active', i.dataset.tier === state.tier);
+        });
+    });
 </script>
+
 </body>
 </html>
