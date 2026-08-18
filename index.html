@@ -123,6 +123,65 @@
             display: none;
         }
         .amount-result.show { display: block; }
+        .three-measurements {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 16px 0 12px;
+        }
+        .measure-box {
+            flex: 1;
+            max-width: 120px;
+            padding: 12px 8px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+        .measure-box.highlight {
+            border-color: var(--primary);
+            background: #f9f5ee;
+        }
+        .measure-label {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+        .measure-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .measure-unit {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        .avg-display {
+            text-align: center;
+            padding: 10px 16px;
+            background: #f0f7f0;
+            border: 1px solid #b2d8b2;
+            border-radius: 8px;
+            margin: 10px 0 6px;
+        }
+        .avg-label {
+            font-size: 13px;
+            color: #5a8a5a;
+        }
+        .avg-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2a6b5a;
+            margin: 0 4px;
+        }
+        .avg-hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: 6px;
+            line-height: 1.6;
+        }
+
         .amount-num { font-size: 32px; font-weight: bold; color: var(--primary); }
         .amount-unit { font-size: 14px; color: var(--text-light); }
         .remain-times { font-size: 12px; color: var(--text-light); text-align: right; margin-top: 8px; }
@@ -193,8 +252,29 @@
         <div class="remain-times">今日剩余随喜次数：<span id="remainTimes">3</span>/3</div>
         <button class="btn btn-primary" onclick="calculateAmount()">随喜功德金</button>
         <div class="amount-result" id="amountResult">
-            <div><span class="amount-num" id="amountNum">0</span> <span class="amount-unit">元</span></div>
-            <div style="font-size:12px;color:#888;margin-top:4px;">建议随喜金额（不满意可自己再临时决定的哦）</div>
+            <div class="three-measurements">
+                <div class="measure-box highlight">
+                    <div class="measure-label">第1次测算</div>
+                    <div><span class="measure-value" id="measure1">0</span> <span class="measure-unit">元</span></div>
+                </div>
+                <div class="measure-box highlight">
+                    <div class="measure-label">第2次测算</div>
+                    <div><span class="measure-value" id="measure2">0</span> <span class="measure-unit">元</span></div>
+                </div>
+                <div class="measure-box highlight">
+                    <div class="measure-label">第3次测算</div>
+                    <div><span class="measure-value" id="measure3">0</span> <span class="measure-unit">元</span></div>
+                </div>
+            </div>
+            <div class="avg-display">
+                <span class="avg-label">第2次与第3次平均值：</span>
+                <span class="avg-value" id="avgValue">0</span>
+                <span class="measure-unit">元</span>
+            </div>
+            <div class="avg-hint">
+                💡 您可选取单次出现的，也可选择平均值作为本次随喜金额<br>
+                今日剩余随喜次数：<span id="remainTimes2">3</span>/3
+            </div>
         </div>
     </div>
 
@@ -265,12 +345,17 @@
                 const parsed = JSON.parse(saved);
                 const today = new Date().toDateString();
                 if (parsed.date !== today) {
-                    return { date: today, remainTimes: 3, code: '', amount: 0, tier: 'small' };
+                    return { date: today, remainTimes: 3, code: '', amount: 0, tier: 'small', threeMeasures: null, avgValue: 0 };
+                }
+                // 确保旧数据也有新增字段
+                if (parsed.threeMeasures === undefined) {
+                    parsed.threeMeasures = null;
+                    parsed.avgValue = 0;
                 }
                 return parsed;
             }
         } catch(e) {}
-        return { date: new Date().toDateString(), remainTimes: 3, code: '', amount: 0, tier: 'small' };
+        return { date: new Date().toDateString(), remainTimes: 3, code: '', amount: 0, tier: 'small', threeMeasures: null, avgValue: 0 };
     }
 
     function saveState() {
@@ -357,16 +442,39 @@
         }
         const ranges = { small: [1, 48], medium: [48, 148], large: [188, 488] };
         const [min, max] = ranges[state.tier];
-        const amount = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        state.amount = amount;
+        // 三次独立随机测算（每次都是 [min, max] 范围内的均匀分布）
+        const m1 = Math.floor(Math.random() * (max - min + 1)) + min;
+        const m2 = Math.floor(Math.random() * (max - min + 1)) + min;
+        const m3 = Math.floor(Math.random() * (max - min + 1)) + min;
+
+        // 第2次与第3次的平均值（四舍五入取整）
+        const avg = Math.round((m2 + m3) / 2);
+
+        // 保存本次三次结果和平均值到状态
+        state.amount = avg;  // 默认以平均值作为建议金额
+        state.threeMeasures = [m1, m2, m3];
+        state.avgValue = avg;
         state.remainTimes--;
         saveState();
 
+        // 更新UI
+        document.getElementById('measure1').textContent = m1;
+        document.getElementById('measure2').textContent = m2;
+        document.getElementById('measure3').textContent = m3;
+        document.getElementById('avgValue').textContent = avg;
         document.getElementById('remainTimes').textContent = state.remainTimes;
-        document.getElementById('amountNum').textContent = amount;
+        document.getElementById('remainTimes2').textContent = state.remainTimes;
         document.getElementById('amountResult').classList.add('show');
-        showToast('随喜完成：' + amount + '元');
+
+        // 提示语：剩余次数提示
+        let remainMsg = '随喜完成！三次测算结果已显示。';
+        if (state.remainTimes > 0) {
+            remainMsg += '\n您还剩下 ' + state.remainTimes + ' 次。';
+        } else {
+            remainMsg += '\n今日次数已用完，明日或下次再来吧。';
+        }
+        showToast(remainMsg);
     }
 
     // ========== 3. 复制5行组合内容 ==========
@@ -407,12 +515,16 @@
     // ========== 初始化恢复状态 ==========
     window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('remainTimes').textContent = state.remainTimes;
+        document.getElementById('remainTimes2').textContent = state.remainTimes;
         if (state.code) {
             document.getElementById('codeText').textContent = state.code;
             document.getElementById('codeDisplay').classList.add('show');
         }
-        if (state.amount > 0) {
-            document.getElementById('amountNum').textContent = state.amount;
+        if (state.amount > 0 && state.threeMeasures) {
+            document.getElementById('measure1').textContent = state.threeMeasures[0];
+            document.getElementById('measure2').textContent = state.threeMeasures[1];
+            document.getElementById('measure3').textContent = state.threeMeasures[2];
+            document.getElementById('avgValue').textContent = state.avgValue;
             document.getElementById('amountResult').classList.add('show');
         }
         document.querySelectorAll('.tier-item').forEach(i => {
