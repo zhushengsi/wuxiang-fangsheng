@@ -217,10 +217,58 @@
     <!-- 4. 布施动态与查询 -->
     <div class="card">
         <div class="card-title">肆 · 布施动态与记录查询</div>
-        <a href="https://www.kdocs.cn/etapps/query/q/s4bmiLMA" target="_blank" class="btn btn-outline" style="text-decoration:none;">🔍 查询布施记录（每天00点前后刷新一次）</a>
-        <div class="content-section" style="margin-top:12px;font-size:13px;color:#888;">
-            📢 布施动态图文展示。（待完善....）
+       <!-- 4. 布施动态与查询 -->    
+<div class="card">        
+<div class="card-title">肆 · 布施动态与记录查询</div>        
+<a href="https://www.kdocs.cn/etapps/query/q/L1VydR7C" target="_blank" class="btn btn-outline" style="text-decoration:none;">🔍 查询布施记录（仅显示您个人的信息，极个别有重码，请对照其他信息）</a>        
+       <!-- 布施动态展示区域 start -->
+<div class="content-section" style="margin-top:12px;">
+    <div id="donation-display">
+        <p style="text-align:center; color:#888;">正在加载最新动态...</p>
+    </div>
+</div>
+
+<script>
+// 自动加载 data.json 并渲染页面
+fetch('data.json')
+  .then(response => response.json())
+  .then(data => {
+    let html = '';
+    // 遍历每一条数据
+    data.forEach(item => {
+      html += `
+        <div style="margin-bottom: 25px; border-bottom: 1px dashed #eee; padding-bottom: 15px;">
+          <!-- 图片展示 -->
+          ${item.image ? `<img src="${item.image}" alt="布施动态" style="width:100%; max-width:600px; border-radius:8px; margin-bottom:10px; display:block;">` : ''}
+          
+          <!-- 简单表格 -->
+          <table style="width:100%; border-collapse:collapse; font-size:14px; background:#f9f9f9; border-radius:6px; overflow:hidden;">
+            <tr>
+              <td style="padding:8px; color:#666; width:80px;">📅 日期</td>
+              <td style="padding:8px; font-weight:bold;">${item.date}</td>
+              <td style="padding:8px; color:#666; width:80px;">💰 金额</td>
+              <td style="padding:8px; color:#d9534f; font-weight:bold;">¥${item.amount}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px; color:#666;">🔢 笔数</td>
+              <td style="padding:8px;">${item.count} 笔</td>
+              <td colspan="2" style="padding:8px; color:#666;"></td>
+            </tr>
+          </table>
+          
+          <!-- 总结文字 -->
+          <p style="margin-top:10px; font-size:14px; line-height:1.6; color:#333;">${item.summary}</p>
         </div>
+      `;
+    });
+    document.getElementById('donation-display').innerHTML = html;
+  })
+  .catch(err => {
+    document.getElementById('donation-display').innerHTML = '<p style="color:red;">加载失败，请检查 data.json 文件是否存在。</p>';
+    console.error('Error:', err);
+  });
+</script>
+<!-- 布施动态展示区域 end -->
     </div>
 
     <!-- 5. 关于无相布施 -->
