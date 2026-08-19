@@ -236,8 +236,41 @@ fetch('data.json')
   .then(data => {
     let html = '';
     // 遍历每一条数据
-    data.forEach(item => {
-      html += `
+   data.forEach(item => {
+    // 1. 先定义占位图路径（建议放在文件最顶部，这里为了演示放在循环里）
+    const FALLBACK_IMG = 'images/fallback.jpg'; 
+
+    // 2. 处理图片逻辑：如果有图片路径，生成带容错功能的 img 标签；否则为空字符串
+    // 注意：onerror 里的单引号 ' 和双引号 " 要区分开，防止冲突
+    let imgHtml = '';
+    if (item.image) {
+        imgHtml = `<img src="${item.image}" 
+                     alt="布施动态" 
+                     style="width:100%; max-width:600px; border-radius:8px; margin-bottom:10px; display:block;" 
+                     onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">`;
+    }
+
+    // 3. 拼接 HTML (注意看最后面的闭合反引号 ` 和分号 ;)
+    html += `
+        <div class="card">
+            <div class="card-title">${item.time}</div>
+            
+            <!-- 这里插入刚才生成的图片变量 -->
+            ${imgHtml}
+
+            <table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+                <!-- 表格内容保持不变 -->
+                <tr>
+                    <td style="padding:8px; color:#666;">金额</td>
+                    <td style="padding:8px; color:#333; font-weight:bold;">${maskAmount(item.amount)}</td>
+                </tr>
+                <!-- ...其他表格行... -->
+            </table>
+
+            <p style="margin-top:10px; font-size:14px; line-height:1.6; color:#333;">${item.summary}</p>
+        </div>
+    `; // <--- 这里的反引号和分号非常重要！
+});
         <div style="margin-bottom: 25px; border-bottom: 1px dashed #eee; padding-bottom: 15px;">
           <!-- 图片展示 -->
           ${item.image ? `<img src="${item.image}" alt="布施动态" style="width:100%; max-width:600px; border-radius:8px; margin-bottom:10px; display:block;">` : ''}
@@ -245,8 +278,8 @@ fetch('data.json')
           <!-- 简单表格 -->
           <table style="width:100%; border-collapse:collapse; font-size:14px; background:#f9f9f9; border-radius:6px; overflow:hidden;">
             <tr>
-              <td style="padding:8px; color:#666; width:80px;">📅 日期</td>
-              <td style="padding:8px; font-weight:bold;">${item.date}</td>
+              <td style="padding:8px; color:#666; width:80px;">📅 时间</td>
+              <td style="padding:8px; font-weight:bold;">${item.time}</td>
               <td style="padding:8px; color:#666; width:80px;">💰 金额</td>
               <td style="padding:8px; color:#d9534f; font-weight:bold;">¥${item.amount}</td>
             </tr>
