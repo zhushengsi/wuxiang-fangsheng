@@ -219,7 +219,7 @@
         <div class="card-title">肆 · 布施动态与记录查询</div>
          <a href="https://www.kdocs.cn/l/cp6HhPkTzx3G" target="_blank" class="btn btn-outline" style="text-decoration:none;">📋 请点此查看所有布施供养时间及金额记录（只显示个位数）与总账信息</a>
         <!-- 温馨提示@.：先去微信复制吉祥码 -->
-   <!-- ✅ 修改后的代码 -->
+        <!-- ✅ 修改后的代码 -->
 <div style="background-color: #fffbf0; border: 1px solid #f5e6c8; border-radius: 8px; padding: 15px; margin-top: 40px; margin-bottom: 5px; font-size: 14px; color: #5d4037; line-height: 1.6;">
         <!-- 左侧虚线（CSS自动绘制，完美对齐） -->
     <div style="flex-grow: 1; height: 1px; background-image: linear-gradient(to right, #d4a373 50%, transparent 50%); background-size: 10px 1px; background-repeat: repeat-x; opacity: 0.6;"></div>
@@ -261,13 +261,15 @@ fetch('data.json')
       const summaryId = `summary-${index}`;
       const arrowId = `arrow-${index}`;
 
-      // 1. 构建图片区域（默认隐藏，放在表格上方）
-      // 1. 构建图片区域（默认隐藏，放在表格上方）
-     // 1. 构建图片区域 (支持单张或多张)
+      // 1. 构建图片区域 (默认隐藏，支持单张或多张)
 let imgHtml = '';
 // 判断是否存在 images 数组，且数组长度大于 0
-if (item.images && item.images.length > 0) {
-    imgHtml = `<div style="margin-bottom: 15px; text-align: center;">`;
+// 兼容处理：如果 JSON 用的是 "image" 而非 "images"
+      if (!item.images && item.image) {
+        item.images = [item.image];
+      }
+      if (item.images && item.images.length > 0) {
+    imgHtml = `<div id="${imgId}" style="display:none; margin-bottom: 15px; text-align: center;">`;
     // 循环遍历数组，生成每一张图片
     item.images.forEach(imgSrc => {
         imgHtml += `<img src="${imgSrc}" 
