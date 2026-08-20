@@ -218,22 +218,24 @@
     <div class="card">
         <div class="card-title">肆 · 布施动态与记录查询</div>
          <a href="https://www.kdocs.cn/l/cp6HhPkTzx3G" target="_blank" class="btn btn-outline" style="text-decoration:none;">📋 请点此查看所有布施供养时间及金额记录（只显示个位数）与总账信息</a>
-        <!-- 温馨提示@.：先去微信复制吉祥码 -->
-        <!-- ✅ 修改后的代码 -->
-<div style="background-color: #fffbf0; border: 1px solid #f5e6c8; border-radius: 8px; padding: 15px; margin-top: 40px; margin-bottom: 5px; font-size: 14px; color: #5d4037; line-height: 1.6;">
-        <!-- 左侧虚线（CSS自动绘制，完美对齐） -->
-    <div style="flex-grow: 1; height: 1px; background-image: linear-gradient(to right, #d4a373 50%, transparent 50%); background-size: 10px 1px; background-repeat: repeat-x; opacity: 0.6;"></div>
-    
-    <!-- 右侧标题（去掉了乱码符号） -->
-    <span style="margin-left: 10px; font-weight: bold; color: #b45309; font-size: 16px; white-space: nowrap;">📌 温馨提示：</span>
-</div>
+        <!-- 温馨提示@：先去微信复制吉祥码 -->
+        <div style="background-color: #fffbf0; border: 1px solid #f5e6c8; border-radius: 8px; padding: 15px; margin-bottom: 20px; font-size: 14px; color: #5d4037; line-height: 1.6;">
+    <!-- 标题行：左侧虚线 + 右侧标题 -->
+    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+        <div style="flex-grow: 1; height: 1px; background-image: linear-gradient(to right, #d4a373 50%, transparent 50%); background-size: 10px 1px; background-repeat: repeat-x; opacity: 0.6;"></div>
+        <span style="margin-left: 10px; font-weight: bold; color: #b45309; font-size: 16px;">📌 温馨提示@：</span>
+    </div>
 
     <!-- 正文内容 -->
     <div style="padding-left: 5px;">
         <p style="margin: 0 0 10px 0;">
             查询下面个人布施记录前，请先打开手机微信聊天记录，找到那个带“#”的<strong>专属吉祥码</strong>（格式如 <span style="background:#eee; padding:2px 5px; border-radius:4px; font-family:monospace;">#9A3M7T2F5</span>），<strong>长按复制</strong>就可以了。
-            没有吉祥码将无法查询到您的布施记录哦！
-        </div>
+        </p>
+        <p style="margin: 0; color: #d97706; font-weight: 500;">
+            **没有您的吉祥码将无法查询到您的布施信息哦！
+        </p>
+    </div>
+</div>
 <a href="https://www.kdocs.cn/etapps/query/q/L1VydR7C" target="_blank" class="btn btn-outline" style="text-decoration:none;">🔍 查询布施记录（仅查询您个人的信息，极个别有与他人重码，请对照其他信息判断）</a>        
       <!-- 布施动态展示区域 start -->
 <div class="content-section" style="margin-top:12px;">
@@ -243,7 +245,7 @@
 </div>
 <script>
 // 自动加载 data.json 并渲染页面
-fetch('./data.json') // 或者 fetch('data.json')
+fetch('data.json')
   .then(response => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -254,69 +256,43 @@ fetch('./data.json') // 或者 fetch('data.json')
     let html = '';
     const FALLBACK_IMG = 'images/fallback.jpg';
 
-    // 三个独立图片按钮的配置
-    const imgConfigs = [
-      { key: 'img_main',    label: '📷 素餐悦莲',  suffix: 'main' },
-      { key: 'img_receipt', label: '🧾 收据凭证',  suffix: 'receipt' },
-      { key: 'img_meal',    label: '🍱 餐费详情',  suffix: 'meal' }
-    ];
-
     data.forEach((item, index) => {
-      const uid = `row-${index}`;
-      const summaryId = `summary-${index}`;
+      // 生成唯一的 ID，用于控制折叠
+      const detailId = `detail-${index}`;
 
-      // --- 兼容旧格式：如果 JSON 中仍有 image / images 字段 ---
-      if (!item.img_main && item.image) {
-        item.img_main = item.image;
+      // 1. 构建图片区域（默认隐藏）
+      let imgHtml = '';
+      if (item.image) {
+        imgHtml = `
+          <div style="margin-top:15px; text-align:center;">
+            <img src="${item.image}" 
+                 alt="布施动态" 
+                 style="width:100%; max-width:600px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1);" 
+                 onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">
+          </div>`;
       }
-      if (!item.img_main && item.images && item.images.length > 0) {
-        item.img_main = item.images[0];
-        if (item.images.length > 1 && !item.img_meal) {
-          item.img_meal = item.images[1];
-        }
-      }
 
-      // --- 1. 动态生成独立开关按钮 ---
-      let actionButtons = '';
-      imgConfigs.forEach(cfg => {
-        if (item[cfg.key]) {
-          const btnId = `${uid}-btn-${cfg.suffix}`;
-          const contentId = `${uid}-${cfg.suffix}`;
-          actionButtons += `<button id="${btnId}" class="detail-btn" onclick="toggleImgDetail('${contentId}','${btnId}','${cfg.label}')" style="margin:4px 3px; padding:6px 14px; font-size:12px; cursor:pointer; background:#fff; border:1px solid #ddd; border-radius:20px; color:#666; display:inline-flex; align-items:center; gap:4px;"><span style="font-size:10px;">▼</span> ${cfg.label}</button>`;
-        }
-      });
-
-      // --- 2. 动态生成独立的图片容器（默认隐藏） ---
-      let imgContainers = '';
-      imgConfigs.forEach(cfg => {
-        if (item[cfg.key]) {
-          const contentId = `${uid}-${cfg.suffix}`;
-          imgContainers += `<div id="${contentId}" style="display:none; margin-top:10px; text-align:center;"><img src="${item[cfg.key]}" loading="lazy" alt="${cfg.label}" style="width:100%; max-width:500px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.1);" onerror="this.src='${FALLBACK_IMG}'"></div>`;
-        }
-      });
-
-      // --- 3. 构建摘要区域（默认隐藏） ---
-      const summaryHtml = `
-        <div id="${summaryId}" style="display:none; margin-top:12px; border-top:1px dashed #eee; padding-top:12px;">
-          <p style="font-size:14px; line-height:1.6; color:#333; background:#fffbe6; padding:10px; border-radius:6px;">
+      // 2. 构建详情页内容（默认隐藏）
+      // 这里包含了图片和详细摘要
+      const detailsContent = `
+        <div id="${detailId}" style="display:none; margin-top:15px; border-top:1px dashed #eee; padding-top:15px;">
+          ${imgHtml}
+          <p style="margin-top:15px; font-size:15px; line-height:1.6; color:#333; background:#fffbe6; padding:10px; border-radius:6px;">
             <strong>📝 详情记录：</strong><br>
             ${item.summary}
           </p>
         </div>
       `;
 
-      // --- 4. 构建摘要开关按钮 ---
-      let summaryBtn = '';
-      if (item.summary) {
-        const summaryBtnId = `${uid}-btn-summary`;
-        summaryBtn = `<button id="${summaryBtnId}" class="detail-btn" onclick="toggleImgDetail('${summaryId}','${summaryBtnId}','📝 详情记录')" style="margin:4px 3px; padding:6px 14px; font-size:12px; cursor:pointer; background:#fff; border:1px solid #ddd; border-radius:20px; color:#666; display:inline-flex; align-items:center; gap:4px;"><span style="font-size:10px;">▼</span> 📝 详情记录</button>`;
-      }
-
-      // --- 5. 组装主卡片 ---
-      const hasButtons = actionButtons || summaryBtn;
-
+      // 3. 构建主卡片（始终显示核心数据）
       html += `
-        <div class="card" style="margin-bottom:20px; background:#fff; border:1px solid #eee; border-radius:8px; padding:15px;">
+        <div class="card" style="margin-bottom: 20px; background:#fff; border:1px solid #eee; border-radius:8px; padding:15px; cursor:pointer;" onclick="toggleDetail('${detailId}')">
+          
+          <!-- 头部：点击提示 -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+             <span style="font-size:12px; color:#999;">👆 点击此处查看/隐藏图片与详情</span>
+             <span style="font-size:12px; color:#1890ff;">▼ 展开详情</span>
+          </div>
 
           <!-- 核心数据表格（始终可见） -->
           <table style="width:100%; border-collapse:collapse; font-size:15px; background:#f9f9f9; border-radius:6px; overflow:hidden;">
@@ -326,27 +302,18 @@ fetch('./data.json') // 或者 fetch('data.json')
             </tr>
             <tr>
               <td style="padding:10px; color:#666;">💰 金额</td>
+              <!-- 直接显示金额，不再脱敏 -->
               <td style="padding:10px; color:#d9534f; font-weight:bold; font-size:16px;">￥${item.amount}</td>
             </tr>
             <tr>
               <td style="padding:10px; color:#666;">🔢 笔数</td>
+              <!-- 直接显示笔数 -->
               <td style="padding:10px; font-weight:bold; color:#333;">${item.count} 笔</td>
             </tr>
           </table>
 
-          ${hasButtons ? `
-          <!-- 独立开关按钮区域 -->
-          <div style="margin-top:12px; text-align:center; border-top:1px dashed #eee; padding-top:10px;">
-            ${actionButtons}
-            ${summaryBtn}
-          </div>
-          ` : ''}
-
-          <!-- 独立的图片容器区域 -->
-          ${imgContainers}
-
-          <!-- 摘要区域 -->
-          ${summaryHtml}
+          <!-- 隐藏的详情区域 -->
+          ${detailsContent}
         </div>
       `;
     });
@@ -358,27 +325,14 @@ fetch('./data.json') // 或者 fetch('data.json')
     console.error('Error:', err);
   });
 
-// 通用切换函数：控制单个按钮对应的图片/摘要区域
-function toggleImgDetail(contentId, btnId, label) {
-  const contentEl = document.getElementById(contentId);
-  const btnEl = document.getElementById(btnId);
-  if (!contentEl) return;
-
-  if (contentEl.style.display === 'none') {
-    // 展开
-    contentEl.style.display = 'block';
-    if (btnEl) {
-      btnEl.innerHTML = '<span style="font-size:10px;">▲</span> 收起' + label.replace(/^[^\s]+\s/, '');
-      btnEl.style.color = '#d9534f';
-      btnEl.style.borderColor = '#d9534f';
-    }
-  } else {
-    // 收起
-    contentEl.style.display = 'none';
-    if (btnEl) {
-      btnEl.innerHTML = '<span style="font-size:10px;">▼</span> ' + label;
-      btnEl.style.color = '#666';
-      btnEl.style.borderColor = '#ddd';
+// 定义切换显示/隐藏的函数
+function toggleDetail(id) {
+  const detailDiv = document.getElementById(id);
+  if (detailDiv) {
+    if (detailDiv.style.display === 'none') {
+      detailDiv.style.display = 'block';
+    } else {
+      detailDiv.style.display = 'none';
     }
   }
 }
@@ -410,7 +364,7 @@ function toggleImgDetail(contentId, btnId, label) {
     // ========== 配置项（按需修改） ==========
     const PAY_NOTE = '#布施:愿力释凡提(amtfjwz)/放生功德款收款/001';
     // ⚠️ 请替换为实际部署的GitHub Pages地址
-    const SITE_URL = 'https://zhushengsi.github.io/wuxiang-fangsheng/';
+    const SITE_URL = 'https://zhushengsi.github.io/wuxiang-bushi/';
     // 微信支付链接（隐藏，仅复制到剪贴板）
     const WECHAT_PAY_LINK = '#付款:愿力释凡提(amtfjwz)/放生功德款收款/001';
     // 页面显示的操作指引文案（与复制到剪贴板的第2行保持一致）
