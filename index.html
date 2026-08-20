@@ -217,18 +217,14 @@
     <!-- 4. 布施动态与查询 -->
     <div class="card">
         <div class="card-title">肆 · 布施动态与记录查询</div>
-       <!-- 4. 布施动态与查询 -->    
-<div class="card">        
-<div class="card-title">肆 · 布施动态与记录查询</div>   
-    <a href="https://www.kdocs.cn/l/cp6HhPkTzx3G" target="_blank" class="btn btn-outline" style="text-decoration:none;">📋 请点此查看所有布施供养时间及金额记录（只显示个位数）与总账信息</a>
+         <a href="https://www.kdocs.cn/l/cp6HhPkTzx3G" target="_blank" class="btn btn-outline" style="text-decoration:none;">📋 请点此查看所有布施供养时间及金额记录（只显示个位数）与总账信息</a>
 <a href="https://www.kdocs.cn/etapps/query/q/L1VydR7C" target="_blank" class="btn btn-outline" style="text-decoration:none;">🔍 查询布施记录（仅查询您个人的信息，极个别有与他人重码，请对照其他信息判断）</a>        
-       <!-- 布施动态展示区域 start -->
+      <!-- 布施动态展示区域 start -->
 <div class="content-section" style="margin-top:12px;">
     <div id="donation-display">
         <p style="text-align:center; color:#888;">正在加载最新动态...</p>
     </div>
 </div>
-
 <script>
 // 自动加载 data.json 并渲染页面
 fetch('data.json')
@@ -240,13 +236,11 @@ fetch('data.json')
   })
   .then(data => {
     let html = '';
-    // 修改点：将备用图指向一张真实存在的图片
     const FALLBACK_IMG = 'images/2026.8.19-10.00.jpg';
 
     data.forEach(item => {
       let imgHtml = '';
       if (item.image) {
-        // 这里的 onerror 逻辑保持不变，当 item.image 加载失败时，会显示 FALLBACK_IMG
         imgHtml = `<img src="${item.image}" alt="布施动态" style="width:100%; max-width:600px; border-radius:8px; margin-bottom:10px; display:block;" onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">`;
       }
       html += `
@@ -275,6 +269,7 @@ fetch('data.json')
     document.getElementById('donation-display').innerHTML = '<p style="color:red;">加载失败，请检查 data.json 文件是否存在或格式是否正确。</p>';
     console.error('Error:', err);
   });
+</script>
 <!-- 布施动态展示区域 end -->
     </div>
 
