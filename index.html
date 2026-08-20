@@ -217,23 +217,18 @@
     <!-- 4. 布施动态与查询 -->
     <div class="card">
         <div class="card-title">肆 · 布施动态与记录查询</div>
-       <!-- 4. 布施动态与查询 -->    
-<div class="card">        
-<div class="card-title">肆 · 布施动态与记录查询</div>   
-    <a href="https://www.kdocs.cn/l/cp6HhPkTzx3G" target="_blank" class="btn btn-outline" style="text-decoration:none;">📋 请点此查看所有布施供养时间及金额记录（只显示个位数）与总账信息</a>
+         <a href="https://www.kdocs.cn/l/cp6HhPkTzx3G" target="_blank" class="btn btn-outline" style="text-decoration:none;">📋 请点此查看所有布施供养时间及金额记录（只显示个位数）与总账信息</a>
 <a href="https://www.kdocs.cn/etapps/query/q/L1VydR7C" target="_blank" class="btn btn-outline" style="text-decoration:none;">🔍 查询布施记录（仅查询您个人的信息，极个别有与他人重码，请对照其他信息判断）</a>        
-       <!-- 布施动态展示区域 start -->
+      <!-- 布施动态展示区域 start -->
 <div class="content-section" style="margin-top:12px;">
     <div id="donation-display">
         <p style="text-align:center; color:#888;">正在加载最新动态...</p>
     </div>
 </div>
-
 <script>
 // 自动加载 data.json 并渲染页面
 fetch('data.json')
   .then(response => {
-    // 增加网络请求状态检查，防止找不到文件时依然尝试解析 JSON
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -241,47 +236,33 @@ fetch('data.json')
   })
   .then(data => {
     let html = '';
-    const FALLBACK_IMG = 'images/fallback.jpg'; // 占位图路径，放在循环外避免重复定义
+    const FALLBACK_IMG = 'images/2026.8.19-10.00.jpg';
 
-    // 遍历每一条数据
     data.forEach(item => {
-      // 处理图片逻辑：如果有图片路径，生成带容错功能的 img 标签；否则为空字符串
       let imgHtml = '';
       if (item.image) {
-        imgHtml = `<img src="${item.image}" 
-                     alt="布施动态" 
-                     style="width:100%; max-width:600px; border-radius:8px; margin-bottom:10px; display:block;" 
-                     onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">`;
+        imgHtml = `<img src="${item.image}" alt="布施动态" style="width:100%; max-width:600px; border-radius:8px; margin-bottom:10px; display:block;" onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">`;
       }
-
-      // 拼接完整的 HTML 结构（将你的时间、金额、笔数、总结等全部整合在一起）
       html += `
         <div class="card" style="margin-bottom: 25px; border-bottom: 1px dashed #eee; padding-bottom: 15px;">
-          <!-- 插入图片 -->
           ${imgHtml}
-          
-          <!-- 信息表格 -->
           <table style="width:100%; border-collapse:collapse; font-size:14px; background:#f9f9f9; border-radius:6px; overflow:hidden; margin-bottom:10px;">
             <tr>
-              <td style="padding:8px; color:#666; width:80px;">📅 时间</td>
+              <td style="padding:8px; color:#666; width:80px;">⏰ 时间</td>
               <td style="padding:8px; font-weight:bold;">${item.time}</td>
               <td style="padding:8px; color:#666; width:80px;">💰 金额</td>
-              <td style="padding:8px; color:#d9534f; font-weight:bold;">¥${maskAmount(item.amount)}</td>
+              <td style="padding:8px; color:#d9534f; font-weight:bold;">￥${maskAmount(item.amount)}</td>
             </tr>
             <tr>
-              <td style="padding:8px; color:#666;">🔢 笔数</td>
+              <td style="padding:8px; color:#666;">📝 笔数</td>
               <td style="padding:8px;">${item.count} 笔</td>
               <td colspan="2" style="padding:8px; color:#666;"></td>
             </tr>
           </table>
-          
-          <!-- 总结文字 -->
           <p style="margin-top:10px; font-size:14px; line-height:1.6; color:#333;">${item.summary}</p>
         </div>
-      `; // <--- 注意：这里才是模板字符串的真正结束！
-    }); // <--- forEach 循环在这里结束
-
-    // 将生成的 HTML 注入到页面中
+      `;
+    });
     document.getElementById('donation-display').innerHTML = html;
   })
   .catch(err => {
