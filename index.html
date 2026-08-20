@@ -243,7 +243,7 @@
 </div>
 <script>
 // 自动加载 data.json 并渲染页面
-fetch('data.json')
+fetch('./data.json') // 或者 fetch('data.json')
   .then(response => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
