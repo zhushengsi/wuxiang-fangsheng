@@ -262,18 +262,21 @@ fetch('data.json')
       const arrowId = `arrow-${index}`;
 
       // 1. 构建图片区域（默认隐藏，放在表格上方）
-      let imgHtml = '';
-      if (item.image) {
-        imgHtml = `
-          <div id="${imgId}" style="display:none; margin-bottom:15px; text-align:center;">
-            <img src="${item.image}" 
-                 alt="布施动态" 
-                 style="width:100%; max-width:600px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.12);" 
-                 onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">
-          </div>`;
-      } else {
-        imgHtml = `<div id="${imgId}" style="display:none;"></div>`;
-      }
+      // 1. 构建图片区域（默认隐藏，放在表格上方）
+     // 1. 构建图片区域 (支持单张或多张)
+let imgHtml = '';
+// 判断是否存在 images 数组，且数组长度大于 0
+if (item.images && item.images.length > 0) {
+    imgHtml = `<div style="margin-bottom: 15px; text-align: center;">`;
+    // 循环遍历数组，生成每一张图片
+    item.images.forEach(imgSrc => {
+        imgHtml += `<img src="${imgSrc}" 
+                     alt="布施动态" 
+                     style="width: 100%; max-width: 600px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: block; margin: 0 auto 10px auto;"
+                     onerror="this.src='${FALLBACK_IMG}'">`;
+    });
+    imgHtml += `</div>`;
+}
 
       // 2. 构建摘要区域（默认隐藏，放在表格下方）
       const summaryHtml = `
