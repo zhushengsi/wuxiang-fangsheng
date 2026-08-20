@@ -226,6 +226,15 @@
     </div>
 </div>
 <script>
+// 【补充】定义金额脱敏/格式化函数，防止报错
+function maskAmount(amount) {
+    if (!amount) return '***';
+    // 简单示例：只显示个位数，前面用 * 代替
+    const str = String(amount);
+    if (str.length <= 1) return str;
+    return '*'.repeat(str.length - 1) + str.charAt(str.length - 1);
+}
+
 // 自动加载 data.json 并渲染页面
 fetch('data.json')
   .then(response => {
@@ -236,13 +245,18 @@ fetch('data.json')
   })
   .then(data => {
     let html = '';
-    const FALLBACK_IMG = 'images/2026.8.19-10.00.jpg';
+    // 【修复】将占位图移到循环外部，并修正为正确的文件名
+    const FALLBACK_IMG = 'images/fallback.jpg'; 
 
     data.forEach(item => {
       let imgHtml = '';
       if (item.image) {
-        imgHtml = `<img src="${item.image}" alt="布施动态" style="width:100%; max-width:600px; border-radius:8px; margin-bottom:10px; display:block;" onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">`;
+        imgHtml = `<img src="${item.image}" 
+                     alt="布施动态" 
+                     style="width:100%; max-width:600px; border-radius:8px; margin-bottom:10px; display:block;" 
+                     onerror="this.onerror=null; this.src='${FALLBACK_IMG}';">`;
       }
+
       html += `
         <div class="card" style="margin-bottom: 25px; border-bottom: 1px dashed #eee; padding-bottom: 15px;">
           ${imgHtml}
@@ -263,6 +277,7 @@ fetch('data.json')
         </div>
       `;
     });
+
     document.getElementById('donation-display').innerHTML = html;
   })
   .catch(err => {
